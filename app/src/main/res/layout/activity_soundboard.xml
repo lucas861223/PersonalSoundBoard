@@ -9,10 +9,9 @@
 
     <Button
         android:id="@+id/b1"
-        android:layout_marginStart="8dp"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:layout_marginLeft="8dp"
+        android:layout_marginLeft="28dp"
         android:layout_marginTop="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -45,10 +44,7 @@
         android:id="@+id/b5"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:layout_marginEnd="26dp"
-        android:layout_marginRight="26dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintLeft_toRightOf="@id/b4"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -56,8 +52,8 @@
         android:id="@+id/b6"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginLeft="28dp"
+        android:layout_marginStart="28dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/b1" />
     <Button
@@ -83,9 +79,6 @@
         android:id="@+id/b10"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:layout_marginEnd="26dp"
-        android:layout_marginRight="26dp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/b9"
         app:layout_constraintTop_toBottomOf="@+id/b5" />
 
@@ -93,8 +86,8 @@
         android:id="@+id/b11"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginLeft="28dp"
+        android:layout_marginStart="28dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/b6" />
     <Button
@@ -120,9 +113,6 @@
         android:id="@+id/b15"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:layout_marginEnd="26dp"
-        android:layout_marginRight="26dp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/b14"
         app:layout_constraintTop_toBottomOf="@+id/b10" />
 
@@ -130,8 +120,8 @@
         android:id="@+id/b16"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginLeft="28dp"
+        android:layout_marginStart="28dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/b11" />
     <Button
@@ -157,9 +147,6 @@
         android:id="@+id/b20"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:layout_marginEnd="26dp"
-        android:layout_marginRight="26dp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/b19"
         app:layout_constraintTop_toBottomOf="@+id/b15" />
 
@@ -167,8 +154,8 @@
         android:id="@+id/b21"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginLeft="28dp"
+        android:layout_marginStart="28dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/b16" />
     <Button
@@ -194,9 +181,6 @@
         android:id="@+id/b25"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:layout_marginEnd="26dp"
-        android:layout_marginRight="26dp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/b24"
         app:layout_constraintTop_toBottomOf="@+id/b20" />
 
@@ -204,10 +188,8 @@
         android:id="@+id/b26"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:layout_marginBottom="83dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginLeft="28dp"
+        android:layout_marginStart="28dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/b21" />
 
@@ -215,8 +197,6 @@
         android:id="@+id/b27"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:layout_marginBottom="83dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/b26"
         app:layout_constraintTop_toBottomOf="@+id/b22" />
 
@@ -224,8 +204,6 @@
         android:id="@+id/b28"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:layout_marginBottom="83dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/b27"
         app:layout_constraintTop_toBottomOf="@+id/b23" />
 
@@ -233,8 +211,6 @@
         android:id="@+id/b29"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:layout_marginBottom="83dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/b28"
         app:layout_constraintTop_toBottomOf="@+id/b24" />
 
@@ -242,11 +218,6 @@
         android:id="@+id/b30"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:layout_marginBottom="83dp"
-        android:layout_marginEnd="26dp"
-        android:layout_marginRight="26dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/b29"
         app:layout_constraintTop_toBottomOf="@+id/b25" />
 
