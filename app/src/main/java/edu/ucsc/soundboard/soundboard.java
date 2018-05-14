@@ -33,13 +33,21 @@ public class Soundboard extends AppCompatActivity {
             for (int i = 0; i < 30; i++) {
                 JSONObject newButtonJSON = new JSONObject();
                 newButtonJSON.put("tag", "");
-                newButtonJSON.put("text", String.valueOf(i));
+                newButtonJSON.put("text", String.valueOf(i+1));
                 buttonArray.put(newButtonJSON);
             }
             newJSON.put("buttons", buttonArray);
         } catch (Exception e) {
         }
         return newJSON;
+    }
+
+    public void playSound(View view){
+        if (view.getTag().toString().isEmpty()){
+            //record audio screen
+        } else {
+            //play sound
+        }
     }
 
     public void saveBoard(View view) {
@@ -49,8 +57,8 @@ public class Soundboard extends AppCompatActivity {
         try {
             JSONArray buttons = boardJSON.getJSONArray("buttons");
             for (int i = 1; i <= 30; i++) {
-                int id = getResources().getIdentifier("button_" + i, "id", getPackageName());
-                Button button = (Button) findViewById(id);
+                int id = getResources().getIdentifier("button" + i, "id", getPackageName());
+                Button button = findViewById(id);
                 buttons.getJSONObject(i - 1).put("text", button.getText());
                 buttons.getJSONObject(i - 1).put("tag", button.getTag());
             }
@@ -65,8 +73,8 @@ public class Soundboard extends AppCompatActivity {
             this.setTitle(board.getString("title"));
             JSONArray buttons = board.getJSONArray("buttons");
             for (int i = 0; i < buttons.length(); i++) {
-                int id = getResources().getIdentifier("button_" + (i + 1), "id", getPackageName());
-                Button button = (Button) findViewById(id);
+                int id = getResources().getIdentifier("button" + (i + 1), "id", getPackageName());
+                Button button = findViewById(id);
                 JSONObject buttonJSON = buttons.getJSONObject(i);
                 button.setText(buttonJSON.getString("text"));
                 button.setTag(buttonJSON.get("tag"));
@@ -74,5 +82,14 @@ public class Soundboard extends AppCompatActivity {
         } catch (Exception e) {
 
         }
+    }
+
+    public void loadBoardScreen(View view) {
+        //load borad screen
+    }
+
+    public void newBoard(View view) {
+        boardJSON = this.emptyBoardJSON();
+        this.loadBoard(boardJSON);
     }
 }
