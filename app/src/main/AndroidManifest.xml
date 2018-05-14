@@ -12,12 +12,11 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".soundboard" />
-        <activity android:name=".Settings"></activity>
+        <activity android:name=".Soundboard" />
+        <activity android:name=".Settings" />
     </application>
 
 </manifest>
