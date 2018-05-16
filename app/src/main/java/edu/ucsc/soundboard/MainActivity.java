@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void loadBoard(View view){
-        Intent settingScreen = new Intent(getApplicationContext(), Settings.class);
-        startActivity(settingScreen);
+        Intent boardList = new Intent(getApplicationContext(), BoardList.class);
+        startActivity(boardList);
     }
 }
