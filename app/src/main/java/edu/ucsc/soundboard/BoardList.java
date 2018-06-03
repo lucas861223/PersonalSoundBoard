@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -91,13 +94,17 @@ public class BoardList extends AppCompatActivity {
             list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    BoardData selected = aList.get(position);
                     Intent detailIntent = new Intent(context, Soundboard.class);
-                    detailIntent.putExtra("title", selected.titleText);
-                    detailIntent.putExtra("buttonarray", selected.buttonArray.toString());
-                    /* JSONArray is being converted to a string^. In Soundboard, change it back with the following:
+                    try {
+                        detailIntent.putExtra("boardjson", jarr.getJSONObject(position).toString());
+                        detailIntent.putExtra("jIndex", position);
+                    }
+                    catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    /* JSONObject is being converted to a string^. In Soundboard, change it back with the following:
 
-                    String bArray = getIntent().getStringExtra("buttonarray");
+                    String bArray = getIntent().getStringExtra("boardjson");
                     try {
                         JSONArray buttons = new JSONArray(bArray);
                     } catch (JSONException e) {
@@ -113,5 +120,33 @@ public class BoardList extends AppCompatActivity {
             list.setVisibility(View.INVISIBLE);
             text.setVisibility(View.VISIBLE);
         }
+    }
+
+    // Show the menu button "ADD EVENT" (Altered from 'List with JSON' example)
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu items for use in the action bar
+        MenuInflater inflater = getMenuInflater();
+        // the menu being referenced here is the menu.xml from res/menu/menu.xml
+        inflater.inflate(R.menu.listmenu, menu);
+        return super.onCreateOptionsMenu(menu);
+
+    }
+
+    // Event handler for the menu button (Altered from 'List with JSON' example)
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.d(TAG, String.format("" + item.getItemId()));
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.action_addnew:
+                // Go to Soundboard.class when the menu button is pressed
+                Intent i = new Intent(this, Soundboard.class);
+                i.putExtra("boardjson", Soundboard.emptyBoardJSON().toString());
+                startActivity(i);
+            default:
+                super.onOptionsItemSelected(item);
+        }
+        return true;
     }
 }

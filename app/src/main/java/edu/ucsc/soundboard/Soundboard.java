@@ -1,6 +1,8 @@
 package edu.ucsc.soundboard;
 
 import android.app.Activity;
+import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -24,6 +26,9 @@ public class Soundboard extends AppCompatActivity {
 
     boolean isSaved = false;
     boolean editMode = false;
+    public JSONObject jobj = null; //For file access
+    public JSONArray jarr = null; //For file access
+    MediaPlayer mediaPlayer;
     JSONObject boardJSON;
     JSONArray inButtons;
 
@@ -76,13 +81,15 @@ public class Soundboard extends AppCompatActivity {
             newJSON.put("title", "new board");
             JSONArray buttonArray = new JSONArray();
             for (int i = 0; i < 30; i++) {
-                JSONObject newButtonJSON = new JSONObject("button"+i);
-                newButtonJSON.put("tag", "");
+                JSONObject newButtonJSON = new JSONObject();
+                newButtonJSON.put("filepath", "");
                 newButtonJSON.put("text", String.valueOf(i+1));
+                newButtonJSON.put("color", Color.parseColor("#DCDCDC"));
                 buttonArray.put(newButtonJSON);
             }
             newJSON.put("buttons", buttonArray);
-        } catch (Exception e) {
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
         return newJSON;
     }
@@ -131,17 +138,86 @@ public class Soundboard extends AppCompatActivity {
         if (!isSaved) {
             //ask for board name
         }
+        // Put the current button info into the buttons array of boardJSON
         try {
-            JSONArray buttons = boardJSON.getJSONArray("buttons");
+            JSONArray bArr = new JSONArray();
             for (int i = 1; i <= 30; i++) {
                 int id = getResources().getIdentifier("button" + i, "id", getPackageName());
                 Button button = findViewById(id);
-                buttons.getJSONObject(i - 1).put("text", button.getText());
-                buttons.getJSONObject(i - 1).put("tag", button.getTag());
+                JSONObject bObj = new JSONObject();
+                bObj.put("text", button.getText());
+                bObj.put("filepath", button.getTag(R.id.filepath));
+                ColorDrawable buttonColor = (ColorDrawable) button.getBackground();
+                bObj.put("color", buttonColor.getColor());
+                bArr.put(bObj);
             }
+            boardJSON.put("buttons", bArr);
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
+        // Open/create file, load the main object (jobj) and the array of boards (jarr)
+        try{
+            File f = new File(getFilesDir(), "Boards.ser");
+            FileInputStream fin = new FileInputStream(f);
+            ObjectInputStream oin = new ObjectInputStream(fin);
+            String j = null;
+            try{
+                j = (String) oin.readObject();
+            }
+            catch(ClassNotFoundException c) {
+                c.printStackTrace();
+            }
+            try{
+                jobj = new JSONObject(j);
+                jarr = jobj.getJSONArray("boards");
+            }
+            catch (JSONException e){
+                e.printStackTrace();
+            }
+            fin.close();
+            oin.close();
+        }
+        catch(IOException e){
+            //No JSONObject found; make a new one, and add in the blank boards array
+            jobj = new JSONObject();
+            jarr = new JSONArray();
+            try{
+                jobj.put("boards", jarr);
+            }
+            catch(JSONException j){
+                j.printStackTrace();
+            }
+        }
+        // Add new content to the JSONarray, or append if it doesn't exist
+        try {
+            if (getIntent().hasExtra("jIndex")) {
+                // Position in the array was passed in through the list view, meaning this is NOT a new array. overwrite the previous version.
+                int idx = getIntent().getIntExtra("jIndex", 0);
+                jarr.put(idx, boardJSON);
+            } else {
+                // Position was not passed in. This is a new array; append it to the end of the JSONarray.
+                jarr.put(boardJSON);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        // Write to the file.
+        try{
+            File f = new File(getFilesDir(), "Boards.ser");
+            FileOutputStream fout = new FileOutputStream(f);
+            ObjectOutputStream oout = new ObjectOutputStream(fout);
+            String j = jobj.toString();
+            oout.writeObject(j);
+            oout.close();
+            fout.close();
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
+        // Exit to BoardList. This is to prevent the user from saving multiple copies of the same board, might find a more elegant way to do this later.
+        Intent i = new Intent(Soundboard.this, BoardList.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(i);
     }
 
 
@@ -154,10 +230,13 @@ public class Soundboard extends AppCompatActivity {
                 Button button = findViewById(id);
                 JSONObject buttonJSON = buttons.getJSONObject(i);
                 button.setText(buttonJSON.getString("text"));
-                button.setTag(buttonJSON.get("tag"));
+                button.setTag(R.id.filepath, buttonJSON.getString("filepath"));
+                ColorDrawable buttonColor = (ColorDrawable) button.getBackground();
+                buttonColor.mutate();
+                buttonColor.setColor(Integer.parseInt(buttonJSON.getString("color")));
             }
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
     }
 
