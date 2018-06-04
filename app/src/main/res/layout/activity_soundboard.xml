@@ -464,7 +464,6 @@
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
             android:text="Load"
-            android:onClick="loadBoard"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/edit_button"
             app:layout_constraintHorizontal_bias="0.5"

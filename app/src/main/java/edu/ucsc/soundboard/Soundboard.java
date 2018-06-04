@@ -280,14 +280,8 @@ public class Soundboard extends AppCompatActivity {
         }
     }
 
-    public void loadBoardScreen(View view) {
-        //load borad screen
-    }
 
-    public void newBoard(View view) {
-        boardJSON = this.emptyBoardJSON();
-        this.loadBoard(boardJSON);
-    }
+
     public void MediaRecorderReady(){
         mediaRecorder=new MediaRecorder();
         mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
