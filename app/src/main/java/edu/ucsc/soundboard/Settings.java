@@ -32,14 +32,14 @@ public class Settings extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
 
         view = this.getWindow().getDecorView();
-        view.setBackgroundResource(R.color.red);
+        //view.setBackgroundResource(R.color.red);
 
 
 
         Intent i = getIntent();
         String title = i.getStringExtra("title");
         String color = i.getStringExtra("color");
-        String background = i.getStringExtra("background");
+        //String background = i.getStringExtra("background");
         //String d = i.getStringExtra("d");
         //String e = i.getStringExtra("e");
         //String f = i.getStringExtra("f");
@@ -47,26 +47,26 @@ public class Settings extends AppCompatActivity {
 
         TextView t = (TextView)findViewById(R.id.textView);
         TextView col = (TextView)findViewById(R.id.textView2);
-        TextView bg = (TextView)findViewById(R.id.textView3);
+        //TextView bg = (TextView)findViewById(R.id.textView3);
         //TextView d = (TextView)findViewById(R.id.textView6);
         //TextView e = (TextView)findViewById(R.id.textView4);
         //TextView f = (TextView)findViewById(R.id.textView5);
 
         t.setText("Title: "+title);
         col.setText("Color: "+color);
-        bg.setText("Background: "+background);
+        //bg.setText("Background: "+background);
         //d.setText("Time: "+d);
         //e.setText("Latitude: "+e);
         //f.setText("Longitude: "+f);
 
         ll = (ConstraintLayout)findViewById(R.id.ConstraintLayout);
         b = (Button)findViewById(R.id.b);
-        b.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                ll.setBackgroundColor(Color.RED);
-            }
-        });
+        //b.setOnClickListener(new View.OnClickListener(){
+          //  @Override
+            //public void onClick(View v){
+              //  ll.setBackgroundColor(Color.RED);
+            //}
+        //});
 
 
 

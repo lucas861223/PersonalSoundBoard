@@ -1,8 +1,12 @@
 package edu.ucsc.soundboard;
 
 import android.app.Activity;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.media.MediaPlayer;
+import android.media.MediaRecorder;
+import android.os.Environment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -22,6 +26,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import static android.Manifest.permission.RECORD_AUDIO;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+
 public class Soundboard extends AppCompatActivity {
 
     boolean isSaved = false;
@@ -31,6 +38,8 @@ public class Soundboard extends AppCompatActivity {
     MediaPlayer mediaPlayer;
     JSONObject boardJSON;
     JSONArray inButtons;
+    String filepath;
+    MediaRecorder mediaRecorder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +103,25 @@ public class Soundboard extends AppCompatActivity {
         return newJSON;
     }
 
+    public void recordBoard(View view){
+        MediaRecorderReady();
+        try {
+            // recording starts
+            mediaRecorder.prepare();
+            mediaRecorder.start();
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void stopNewSound (View view) {
+        // recording stops
+        mediaRecorder.stop();
+    }
+
+
     public void enterEditMode(View view){
         editMode = !editMode;
         Button editButton = findViewById(R.id.edit_button);
@@ -116,6 +144,18 @@ public class Soundboard extends AppCompatActivity {
 
         } else {
             //play sound from clickedButton.getTag()
+            //not sure what the file path is
+            //filepath =
+                 //   Environment.getExternalStorageDirectory().getAbsolutePath();
+            mediaPlayer = new MediaPlayer();
+            try {
+                mediaPlayer.setDataSource(filepath);
+                mediaPlayer.prepare();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            mediaPlayer.start();
         }
     }
 
@@ -247,5 +287,24 @@ public class Soundboard extends AppCompatActivity {
     public void newBoard(View view) {
         boardJSON = this.emptyBoardJSON();
         this.loadBoard(boardJSON);
+    }
+    public void MediaRecorderReady(){
+        mediaRecorder=new MediaRecorder();
+        mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        mediaRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
+        mediaRecorder.setOutputFile(filepath);
+    }
+    // method to create a random file name
+
+    // callback method
+
+    public boolean checkPermission() {
+        int result = ContextCompat.checkSelfPermission(getApplicationContext(),
+                WRITE_EXTERNAL_STORAGE);
+        int result1 = ContextCompat.checkSelfPermission(getApplicationContext(),
+                RECORD_AUDIO);
+        return result == PackageManager.PERMISSION_GRANTED &&
+                result1 == PackageManager.PERMISSION_GRANTED;
     }
 }
