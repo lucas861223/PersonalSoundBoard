@@ -116,6 +116,10 @@ public class Soundboard extends AppCompatActivity {
         }
     }
 
+    public void recordBoardMic(View view){
+
+    }
+
     public void stopNewSound (View view) {
         // recording stops
         mediaRecorder.stop();
@@ -279,8 +283,6 @@ public class Soundboard extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
-
 
     public void MediaRecorderReady(){
         mediaRecorder=new MediaRecorder();
