@@ -22,7 +22,6 @@
         </activity>
         <activity android:name=".Soundboard" />
         <activity android:name=".BoardList" />
-        <activity android:name=".Settings" />
         <activity android:name=".Button_Popup" />
     </application>
 
