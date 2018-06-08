@@ -2,6 +2,7 @@ package edu.ucsc.soundboard;
 
 import android.app.Activity;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.ColorDrawable;
 import android.media.MediaRecorder;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
@@ -35,6 +36,8 @@ public class Button_Popup extends AppCompatActivity {
     Intent resultIntent = new Intent();
     TextView buttonName;
     int buttonColor;
+    Button colorButton;
+//    ColorDrawable ColorPickerButtonDrawable;
     MediaRecorder mediaRecorder;
     String filepath;
 
@@ -48,6 +51,21 @@ public class Button_Popup extends AppCompatActivity {
         buttonName = findViewById(R.id.editText);
         buttonName.setText(getIntent().getStringExtra("text"));
         buttonColor = getIntent().getIntExtra("color", 0);
+        colorButton = findViewById(R.id.colorButton);
+//        ColorPickerButtonDrawable = (ColorDrawable) colorButton.getBackground();
+//        ColorPickerButtonDrawable.mutate();
+//        ColorPickerButtonDrawable.setColor(buttonColor);
+//        colorButton.setTextColor(textColor(buttonColor));
+    }
+
+    public static int textColor(int color) {
+        color += 16777216;
+        int r = color / 65536;
+        int g = color % 65536 / 256;
+        int b = color % 63356 % 256;
+        double y = 0.2126 * Math.pow(r / 255.0, 2.2)  +  0.7151 * Math.pow( g / 255.0, 2.2)  +  0.0721 * Math.pow(b / 255.0, 2.2);
+        if (y > 0.18) return -16777216;
+        else return -1;
     }
 
     public void launchColorPicker(View view) {
@@ -56,10 +74,12 @@ public class Button_Popup extends AppCompatActivity {
             public void onCancel(AmbilWarnaDialog dialog) { }
             @Override
             public void onOk(AmbilWarnaDialog dialog, int color) {
-                 buttonColor = color;
+                buttonColor = color;
             }
         });
         colorPicker.show();
+//        ColorPickerButtonDrawable.setColor(buttonColor);
+//        colorButton.setTextColor(textColor(buttonColor));
     }
 
     public void recordNewSound (View view) {

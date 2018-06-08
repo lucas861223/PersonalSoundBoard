@@ -5,7 +5,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
-import android.os.Environment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -31,13 +30,12 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class Soundboard extends AppCompatActivity {
 
-    boolean isSaved = false;
+    boolean isNewBoard;
     boolean editMode = false;
     public JSONObject jobj = null; //For file access
     public JSONArray jarr = null; //For file access
     MediaPlayer mediaPlayer;
     JSONObject boardJSON;
-    JSONArray inButtons;
     String filepath;
     MediaRecorder mediaRecorder;
 
@@ -50,6 +48,7 @@ public class Soundboard extends AppCompatActivity {
         } catch (Exception e) {
         }
         this.loadBoard(boardJSON);
+        isNewBoard = getIntent().hasExtra("jIndex");
     }
 
 
@@ -132,7 +131,7 @@ public class Soundboard extends AppCompatActivity {
         if (editMode) {
             editButton.setText("Exit Edit");
         } else {
-            editButton.setText("edit");
+            editButton.setText("Edit");
         }
     }
 
@@ -146,19 +145,18 @@ public class Soundboard extends AppCompatActivity {
             editButtonScreen.putExtra("id", view.getId());
             startActivityForResult(editButtonScreen, 0);
 
-        } else {
+        } else if (!clickedButton.getTag(R.id.filepath).toString().equals("")){
             //play sound from clickedButton.getTag()
             //not sure what the file path is
             //filepath =
                  //   Environment.getExternalStorageDirectory().getAbsolutePath();
             mediaPlayer = new MediaPlayer();
             try {
-                mediaPlayer.setDataSource(filepath);
+                mediaPlayer.setDataSource(clickedButton.getTag(R.id.filepath).toString());
                 mediaPlayer.prepare();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
             mediaPlayer.start();
         }
     }
@@ -172,16 +170,28 @@ public class Soundboard extends AppCompatActivity {
                 clickedButton.setText(data.getStringExtra("text"));
                 ColorDrawable buttonColor = (ColorDrawable) clickedButton.getBackground();
                 buttonColor.mutate();
-                buttonColor.setColor(data.getIntExtra("color", 0));
-
+                int color = data.getIntExtra("color", 0);
+                buttonColor.setColor(color);
+                clickedButton.setTextColor(Button_Popup.textColor(color));
+            }
+        } else if (requestCode == 1) {
+            if (resultCode == Activity.RESULT_OK) {
+                this.setTitle(data.getStringExtra("title"));
+                saveBoard(data.getStringExtra("title"));
+                isNewBoard = !isNewBoard;       
             }
         }
     }
 
     public void saveBoard(View view) {
-        if (!isSaved) {
-            //ask for board name
+        if (!isNewBoard) {
+            startActivityForResult(new Intent(getApplicationContext(), TitlePopup.class), 1);
+        } else {
+            saveBoard(getIntent().getStringExtra("title"));
         }
+    }
+
+    public void saveBoard(String boardTitle) {
         // Put the current button info into the buttons array of boardJSON
         try {
             JSONArray bArr = new JSONArray();
@@ -196,6 +206,7 @@ public class Soundboard extends AppCompatActivity {
                 bArr.put(bObj);
             }
             boardJSON.put("buttons", bArr);
+            boardJSON.put("title", boardTitle);
         } catch (Exception e) {
             e.printStackTrace();
         }
