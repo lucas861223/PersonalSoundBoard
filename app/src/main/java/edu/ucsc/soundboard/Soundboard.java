@@ -5,6 +5,8 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,6 +15,7 @@ import android.widget.Button;
 import android.content.Intent;
 import android.widget.TextView;
 import android.graphics.drawable.ColorDrawable;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -24,6 +27,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Random;
 
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -34,15 +38,20 @@ public class Soundboard extends AppCompatActivity {
     boolean editMode = false;
     public JSONObject jobj = null; //For file access
     public JSONArray jarr = null; //For file access
-    MediaPlayer mediaPlayer;
     JSONObject boardJSON;
-    String filepath;
+
+    String filename;
     MediaRecorder mediaRecorder;
+    MediaPlayer mediaPlayer;
+    public static final int RequestPermissionCode = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_soundboard);
+        if(!checkPermission()){
+            requestPermission();
+        }
         try {
             boardJSON = new JSONObject(getIntent().getStringExtra("boardjson"));
         } catch (Exception e) {
@@ -103,11 +112,15 @@ public class Soundboard extends AppCompatActivity {
     }
 
     public void recordBoard(View view){
+        Random rand = new Random();
+        filename = Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+Integer.toString(rand.nextInt(9999))+".3gp";
         MediaRecorderReady();
         try {
             // recording starts
             mediaRecorder.prepare();
             mediaRecorder.start();
+            Toast.makeText(Soundboard.this, "Recording",
+                    Toast.LENGTH_LONG).show();
         } catch (IllegalStateException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -300,11 +313,39 @@ public class Soundboard extends AppCompatActivity {
         mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
         mediaRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
-        mediaRecorder.setOutputFile(filepath);
+        mediaRecorder.setOutputFile(filename);
     }
     // method to create a random file name
 
     // callback method
+
+    // permissions from user
+    private void requestPermission() {
+        ActivityCompat.requestPermissions(Soundboard.this, new
+                String[]{WRITE_EXTERNAL_STORAGE, RECORD_AUDIO}, RequestPermissionCode);
+    }
+    // callback method
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case RequestPermissionCode:
+                if (grantResults.length> 0) {
+                    boolean StoragePermission = grantResults[0] ==
+                            PackageManager.PERMISSION_GRANTED;
+                    boolean RecordPermission = grantResults[1] ==
+                            PackageManager.PERMISSION_GRANTED;
+
+                    if (StoragePermission && RecordPermission) {
+                        Toast.makeText(Soundboard.this, "Permission Granted",
+                                Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(Soundboard.this,"Permission Denied",Toast.LENGTH_LONG).show();
+                    }
+                }
+                break;
+        }
+    }
 
     public boolean checkPermission() {
         int result = ContextCompat.checkSelfPermission(getApplicationContext(),
