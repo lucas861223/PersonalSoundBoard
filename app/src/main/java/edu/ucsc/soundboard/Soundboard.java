@@ -169,6 +169,7 @@ public class Soundboard extends AppCompatActivity {
             ColorDrawable buttonColor = (ColorDrawable) clickedButton.getBackground();
             editButtonScreen.putExtra("color", buttonColor.getColor());
             editButtonScreen.putExtra("id", view.getId());
+            editButtonScreen.putExtra("filename", clickedButton.getTag(R.id.filepath).toString());
             startActivityForResult(editButtonScreen, 0);
 
         } else if (!clickedButton.getTag(R.id.filepath).toString().equals("")){
@@ -199,6 +200,7 @@ public class Soundboard extends AppCompatActivity {
                 int color = data.getIntExtra("color", 0);
                 buttonColor.setColor(color);
                 clickedButton.setTextColor(Button_Popup.textColor(color));
+                clickedButton.setTag(R.id.filepath, data.getStringExtra("filepath"));
             }
         } else if (requestCode == 1) {
             if (resultCode == Activity.RESULT_OK) {
