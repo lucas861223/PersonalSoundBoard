@@ -11,28 +11,28 @@ import android.view.View;
 import android.content.Intent;
 import android.widget.TextView;
 
-
-public class TitlePopup extends AppCompatActivity {
+public class filenamePopup extends AppCompatActivity {
     Intent resultIntent = new Intent();
-    TextView titleEntry;
+    TextView nameEntry;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_title_popup);
         DisplayMetrics dm = new DisplayMetrics();
-        this.setTitle("Name for this new board");
+        this.setTitle("Name for this new file");
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         getWindow().setLayout((int) (dm.widthPixels * 0.8), (int) (dm.heightPixels * 0.4));
-        titleEntry = findViewById(R.id.editTitle);
-        titleEntry.setText("new board");
+        nameEntry = findViewById(R.id.editTitle);
+        nameEntry.setText("");
     }
 
     public void save(View view) {
-        resultIntent.putExtra("newtitle", titleEntry.getText().toString());
-        setResult(Activity.RESULT_OK, resultIntent);
-        finish();
-
+        if (!nameEntry.getText().toString().equals("")) {
+            resultIntent.putExtra("newfile", nameEntry.getText().toString());
+            setResult(Activity.RESULT_OK, resultIntent);
+            finish();
+        }
     }
 
     public void cancel(View view){
@@ -41,5 +41,3 @@ public class TitlePopup extends AppCompatActivity {
     }
 
 }
-
-

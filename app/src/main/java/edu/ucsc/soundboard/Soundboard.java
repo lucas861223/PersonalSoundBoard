@@ -27,7 +27,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.Random;
 
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -39,6 +38,7 @@ public class Soundboard extends AppCompatActivity {
     public JSONObject jobj = null; //For file access
     public JSONArray jarr = null; //For file access
     JSONObject boardJSON;
+    Button buttonRecord, buttonStop, buttonSave, buttonEdit;
 
     String filename;
     MediaRecorder mediaRecorder;
@@ -49,6 +49,12 @@ public class Soundboard extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_soundboard);
+        // get references to the menu items
+        buttonRecord = findViewById(R.id.record_button);
+        buttonStop = findViewById(R.id.stop_button);
+        buttonSave = findViewById(R.id.save_button);
+        buttonEdit = findViewById(R.id.edit_button);
+        buttonStop.setEnabled(false); //Turn off stop button on startup
         if(!checkPermission()){
             requestPermission();
         }
@@ -111,15 +117,18 @@ public class Soundboard extends AppCompatActivity {
         return newJSON;
     }
 
-    public void recordBoard(View view){
-        Random rand = new Random();
-        filename = Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+Integer.toString(rand.nextInt(9999))+".3gp";
+    public void recordBoard(String s){
+        filename = Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+s+".3gp";
         MediaRecorderReady();
         try {
             // recording starts
             mediaRecorder.prepare();
             mediaRecorder.start();
-            Toast.makeText(Soundboard.this, "Recording",
+            buttonStop.setEnabled(true);
+            buttonSave.setEnabled(false);
+            buttonRecord.setEnabled(false);
+            buttonEdit.setEnabled(false);
+            Toast.makeText(Soundboard.this, "Recording "+s+".3gp",
                     Toast.LENGTH_LONG).show();
         } catch (IllegalStateException e) {
             e.printStackTrace();
@@ -128,13 +137,17 @@ public class Soundboard extends AppCompatActivity {
         }
     }
 
-    public void recordBoardMic(View view){
-
+    public void recordBoardRedir(View view){
+        startActivityForResult(new Intent(getApplicationContext(), filenamePopup.class), 2);
     }
 
     public void stopNewSound (View view) {
         // recording stops
         mediaRecorder.stop();
+        buttonStop.setEnabled(false);
+        buttonSave.setEnabled(true);
+        buttonRecord.setEnabled(true);
+        buttonEdit.setEnabled(true);
     }
 
 
@@ -189,9 +202,20 @@ public class Soundboard extends AppCompatActivity {
             }
         } else if (requestCode == 1) {
             if (resultCode == Activity.RESULT_OK) {
-                this.setTitle(data.getStringExtra("title"));
-                saveBoard(data.getStringExtra("title"));
-                isNewBoard = !isNewBoard;       
+                //this.setTitle(data.getStringExtra("newtitle"));
+                isNewBoard = !isNewBoard;
+                String newTitle = data.getStringExtra("newtitle");
+                try {
+                    boardJSON.put("title", newTitle);
+                } catch (JSONException e){
+                    e.printStackTrace();
+                }
+                saveBoard();
+            }
+        } else if (requestCode == 2) {
+            if (resultCode == Activity.RESULT_OK) {
+                String newfile = data.getStringExtra("newfile");
+                recordBoard(newfile);
             }
         }
     }
@@ -200,11 +224,11 @@ public class Soundboard extends AppCompatActivity {
         if (!isNewBoard) {
             startActivityForResult(new Intent(getApplicationContext(), TitlePopup.class), 1);
         } else {
-            saveBoard(getIntent().getStringExtra("title"));
+            saveBoard();
         }
     }
 
-    public void saveBoard(String boardTitle) {
+    public void saveBoard() {
         // Put the current button info into the buttons array of boardJSON
         try {
             JSONArray bArr = new JSONArray();
@@ -219,7 +243,6 @@ public class Soundboard extends AppCompatActivity {
                 bArr.put(bObj);
             }
             boardJSON.put("buttons", bArr);
-            boardJSON.put("title", boardTitle);
         } catch (Exception e) {
             e.printStackTrace();
         }

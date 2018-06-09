@@ -24,6 +24,7 @@
         <activity android:name=".BoardList" />
         <activity android:name=".Button_Popup" />
         <activity android:name=".TitlePopup" android:theme="@style/AppTheme.CustomTheme" />
+        <activity android:name=".filenamePopup" android:theme="@style/AppTheme.CustomTheme" />
     </application>
 
 </manifest>

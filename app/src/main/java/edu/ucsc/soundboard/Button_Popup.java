@@ -3,7 +3,6 @@ package edu.ucsc.soundboard;
 import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
-import android.media.MediaRecorder;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -29,16 +28,12 @@ import java.io.ObjectOutputStream;
 
 import yuku.ambilwarna.AmbilWarnaDialog;
 
-import static android.Manifest.permission.RECORD_AUDIO;
-import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
-
 public class Button_Popup extends AppCompatActivity {
     Intent resultIntent = new Intent();
     TextView buttonName;
     int buttonColor;
     Button colorButton;
 //    ColorDrawable ColorPickerButtonDrawable;
-    MediaRecorder mediaRecorder;
     String filepath;
 
     @Override
@@ -82,23 +77,8 @@ public class Button_Popup extends AppCompatActivity {
 //        colorButton.setTextColor(textColor(buttonColor));
     }
 
-    public void recordNewSound (View view) {
-        //filepath = Environment.getExternalStorageDirectory().getAbsolutePath();
-        MediaRecorderReady();
-        try {
-            // recording starts
-            mediaRecorder.prepare();
-            mediaRecorder.start();
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    public void chooseSoundFile(View view) {
 
-    public void stopNewSound (View view) {
-            // recording stops
-            mediaRecorder.stop();
     }
 
     public void save(View view) {
@@ -113,26 +93,6 @@ public class Button_Popup extends AppCompatActivity {
     public void cancel(View view){
         setResult(Activity.RESULT_CANCELED);
         finish();
-    }
-
-    public void MediaRecorderReady(){
-        mediaRecorder=new MediaRecorder();
-        mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-        mediaRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
-        mediaRecorder.setOutputFile(filepath);
-    }
-    // method to create a random file name
-
-    // callback method
-
-    public boolean checkPermission() {
-        int result = ContextCompat.checkSelfPermission(getApplicationContext(),
-                WRITE_EXTERNAL_STORAGE);
-        int result1 = ContextCompat.checkSelfPermission(getApplicationContext(),
-                RECORD_AUDIO);
-        return result == PackageManager.PERMISSION_GRANTED &&
-                result1 == PackageManager.PERMISSION_GRANTED;
     }
 }
 
